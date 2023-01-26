@@ -1,3 +1,6 @@
+import dayjs from "dayjs";
+import { useEffect, useState } from "react";
+import { api } from "../lib/axios";
 import { generateDatesFromYearBeginning } from "../utils/generate-range-days";
 import { HabitDay } from "./HabitDay";
 
@@ -6,11 +9,27 @@ const weekDays = ["D", "S", "T", "Q", "Q", "S", "S"];
 // Chamada da função que verifica o dia que estamos para criar o número de quadrados até a data atual.
 const summaryDates = generateDatesFromYearBeginning();
 
+type Summary = Array<{
+	id: string;
+	date: string;
+	amount: number;
+	completed: number;
+}>;
+
 //Verificar o número de dias minimos para preenchimento da table.
 const minimumSummaryDatesSize = 18 * 7; // 18 semanas
 const amaountOfDaysToFill = minimumSummaryDatesSize - summaryDates.length;
 
 export function SummaryTable() {
+	const [summary, setSummary] = useState<Summary>([]);
+
+	//Realizamos a chamada da API
+	useEffect(() => {
+		api.get("summary").then((response) => {
+			setSummary(response.data);
+		});
+	}, []);
+
 	return (
 		// Aqui é feita a chamada do componente que irá criar a table com os quadrados da aplicação
 		<div className="w-full flex ">
@@ -26,7 +45,17 @@ export function SummaryTable() {
 
 			<div className="grid grid-rows-7 grid-flow-col gap-3">
 				{summaryDates.map((date) => {
-					return <HabitDay amount={5} completed={Math.round(Math.random() * 5)} key={date.toString()} />;
+					//Realizamos a validação para verificar se a data que recebe é a mesma da summary
+					const dayInSummary = summary.find(day => {
+						//Aqui usamos dayjs para ficar mais fácil o tratamento de datas
+						return dayjs(date).isSame(day.date, 'day')
+					})
+
+					return <HabitDay
+						date={date}
+						amount={dayInSummary?.amount} 
+						completed={dayInSummary?.completed} 
+						key={date.toString()} />;
 				})}
 
 				{/* Aqui é criado um fill para preencher um número de quadrados minimos da aplicação */}
