@@ -17,6 +17,11 @@ export function HabitDay({ completed = 0, amount = 0, date }: HabitsProps) {
 	const dayAndMonth = dayjs(date).format("DD/MM");
 	const dayOfWeek = dayjs(date).format("dddd");
 
+	//Aqui criamos a função para "olhar" quantos hábitos estão completos e passar essa informação a nossa progress bar
+	function handleCompletedChange(completed: number){
+		console.log(completed)
+	}
+
 	return (
 		<Popover.Root>
 			{/* Cores do Popover com base na porcentagem completa */}
@@ -40,7 +45,8 @@ export function HabitDay({ completed = 0, amount = 0, date }: HabitsProps) {
 					{/* Barra de Progresso */}
 					<ProgressBar progress={completedPercentage} />
 
-					<HabitsList date={date} />
+					{/* Aqui no habitList é criado uma propriedade onde passamos a função para olhar quantos hábitos foram criados. */}
+					<HabitsList date={date} onCompletedChanged={handleCompletedChange} />
 
 					<Popover.Arrow height={8} width={16} className="fill-zinc-800" />
 				</Popover.Content>
