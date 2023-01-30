@@ -3,14 +3,17 @@ import clsx from "clsx";
 import { ProgressBar } from "./ProgressBar";
 import dayjs from "dayjs";
 import { HabitsList } from "./HabitsList";
+import { useState } from "react";
 
 interface HabitsProps {
 	date: Date;
-	completed?: number;
+	defaultCompleted?: number;
 	amount?: number;
 }
 
-export function HabitDay({ completed = 0, amount = 0, date }: HabitsProps) {
+export function HabitDay({ defaultCompleted = 0, amount = 0, date }: HabitsProps) {
+	const [completed, setCompleted] = useState(defaultCompleted);
+
 	const completedPercentage = amount > 0 ? Math.round((completed / amount) * 100) : 0;
 
 	//Pegar as datas dos dias respectivos e já formatar para dia/mês
@@ -18,15 +21,15 @@ export function HabitDay({ completed = 0, amount = 0, date }: HabitsProps) {
 	const dayOfWeek = dayjs(date).format("dddd");
 
 	//Aqui criamos a função para "olhar" quantos hábitos estão completos e passar essa informação a nossa progress bar
-	function handleCompletedChange(completed: number){
-		console.log(completed)
+	function handleCompletedChange(completed: number) {
+		setCompleted(completed);
 	}
 
 	return (
 		<Popover.Root>
 			{/* Cores do Popover com base na porcentagem completa */}
 			<Popover.Trigger
-				className={clsx("w-10 h-10  border-2  rounded-lg", {
+				className={clsx("w-10 h-10  border-2  rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-violet-600 focus:ring-offset-2 focus:ring-offset-background", {
 					"bg-zinc-900 border-zinc-800": completedPercentage === 0,
 					"bg-violet-900 border-violet-700": completedPercentage > 0 && completedPercentage < 20,
 					"bg-violet-800 border-violet-600": completedPercentage >= 20 && completedPercentage < 40,

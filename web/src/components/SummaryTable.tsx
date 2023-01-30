@@ -44,19 +44,16 @@ export function SummaryTable() {
 			</div>
 
 			<div className="grid grid-rows-7 grid-flow-col gap-3">
-				{summaryDates.map((date) => {
-					//Realizamos a validação para verificar se a data que recebe é a mesma da summary
-					const dayInSummary = summary.find(day => {
-						//Aqui usamos dayjs para ficar mais fácil o tratamento de datas
-						return dayjs(date).isSame(day.date, 'day')
-					})
+				{summary.length > 0 &&
+					summaryDates.map((date) => {
+						//Realizamos a validação para verificar se a data que recebe é a mesma da summary
+						const dayInSummary = summary.find((day) => {
+							//Aqui usamos dayjs para ficar mais fácil o tratamento de datas
+							return dayjs(date).isSame(day.date, "day");
+						});
 
-					return <HabitDay
-						date={date}
-						amount={dayInSummary?.amount} 
-						completed={dayInSummary?.completed} 
-						key={date.toString()} />;
-				})}
+						return <HabitDay date={date} amount={dayInSummary?.amount} defaultCompleted={dayInSummary?.completed} key={date.toString()} />;
+					})}
 
 				{/* Aqui é criado um fill para preencher um número de quadrados minimos da aplicação */}
 				{amaountOfDaysToFill > 0 &&
