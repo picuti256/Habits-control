@@ -7,8 +7,11 @@ import { Header } from "../components/Header";
 
 //Dias de dias da semana
 const weekDay = ["D", "S", "T", "Q", "Q", "S", "S"];
+//Verifica quantos dias já se passaram desde o inicio do ano
 const datesFromYearsStart = generateDatesFromYearBeginning();
+//Número de hábitos disponiveis
 const minimumSummaryDatesSizes = 18 * 7;
+//Quantos hábitos serão exibidos para "preencher" a tela
 const amountOfDaysToFill =
   minimumSummaryDatesSizes - datesFromYearsStart.length;
 
@@ -29,6 +32,7 @@ export function Home() {
         ))}
       </View>
 
+      {/* Própriedade de scroll dentro do celular, foi colocado retirando o header, pois assim só irá mexer o Summary e temos uma "guia" com os dias */}
       <ScrollView
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 50 }}
