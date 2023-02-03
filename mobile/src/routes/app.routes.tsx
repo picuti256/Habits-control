@@ -18,7 +18,7 @@ export function AppRoutes() {
       <Screen name="new" component={New} />
 
       {/* Aqui é informado quando alguém acessar a rota com o nome "Habits", irá rendenizar a tela Habits */}
-      <Screen name="habits" component={Habits} />
+      <Screen name="habit" component={Habits} />
     </Navigator>
   );
 }
