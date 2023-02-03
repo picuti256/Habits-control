@@ -1,23 +1,47 @@
-import { View, Text, ScrollView } from "react-native";
-
+import { useEffect, useState } from "react";
+import { View, Text, ScrollView, Alert } from "react-native";
 import { generateDatesFromYearBeginning } from "../utils/generate-range-between-dates";
-
+import { api } from "../lib/axios";
 import { HabitDay, DAY_SIZE } from "../components/HabitDay";
 import { Header } from "../components/Header";
 import { useNavigation } from "@react-navigation/native";
 
 //Dias de dias da semana
 const weekDay = ["D", "S", "T", "Q", "Q", "S", "S"];
+
 //Verifica quantos dias já se passaram desde o inicio do ano
 const datesFromYearsStart = generateDatesFromYearBeginning();
+
 //Número de hábitos disponiveis
 const minimumSummaryDatesSizes = 18 * 7;
+
 //Quantos hábitos serão exibidos para "preencher" a tela
 const amountOfDaysToFill =
   minimumSummaryDatesSizes - datesFromYearsStart.length;
 
 export function Home() {
+  const [loading, setLoading] = useState(true);
+  const [summary, setSummary] = useState(null);
   const { navigate } = useNavigation();
+
+  // Aqui criamos a função que vai fazer a requisição da nossa API
+  async function fetchData() {
+    try {
+      setLoading(true);
+      const response = await api.get("/summary");
+      console.log(response.data);
+      setSummary(response.data);
+    } catch (error) {
+      Alert.alert("Ops...", "Não foi possível carregar o sumário de hábitos.");
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, []);
   return (
     <View className="flex-1 bg-background px-8 pt-16">
       <Header />
